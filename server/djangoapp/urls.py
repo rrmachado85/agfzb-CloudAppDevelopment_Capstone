@@ -10,6 +10,7 @@ urlpatterns = [
     # name the URL
 
     # path for about view
+     path(route='', view=views.get_dealerships, name='about'),
 
     # path for contact us view
 
