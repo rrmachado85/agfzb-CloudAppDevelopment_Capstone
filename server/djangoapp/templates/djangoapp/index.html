@@ -42,15 +42,15 @@
     </div>
 </nav>
 
-<table class="table" id="table">
-    <thead>
+<table class="table" id="table" data-filter-control="true">
+    <thead data-filter-control="select">
         <tr>
             <th data-field="id">ID</th>
             <th data-field="full_name">Dealer Name</th>
             <th data-field="city">City</th>
             <th data-field="address">Address</th>
             <th data-field="zip">Zip</th>
-            <th data-field="state">State</th>
+            <th data-field="state" data-filter-control="select">State</th>
         </tr>
     </thead>
     <tbody>
@@ -68,5 +68,11 @@
 </table>
 
     </body>
+
+    <script>
+        $(function() {
+          $('#table').bootstrapTable()
+        })
+      </script>
 
 </html>
