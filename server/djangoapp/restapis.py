@@ -32,6 +32,8 @@ def get_request(url, **kwargs):
         # If any error occurs
         print("Network exception occurred")
 
+    print("Params={}".format(kwargs))
+    print("Api_key={}".format(api_key))
     status_code = response.status_code
     print("With status {} ".format(status_code))
     json_data = json.loads(response.text)
@@ -96,7 +98,6 @@ def get_dealer_reviews_from_cf(url, id):
     reviews = reviews_a["docs"]
 
     if json_result:
-        print("line 105",json_result)
         for dealer_review in reviews:
             review_obj = DealerReview(dealership=dealer_review["dealership"],
                                    name=dealer_review["name"],
@@ -120,20 +121,18 @@ def get_dealer_reviews_from_cf(url, id):
     return results
 
 def get_dealer_by_id_from_cf(url, id):
-    results = []
     json_result = get_request(url, id=id)
 
     if json_result:
-       dealers = json_result["body"]
-       for dealer_doc in dealers:
-            # Get its content in `doc` object
-            # Create a CarDealer object with values in `doc` object
-            dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"], full_name=dealer_doc["full_name"],
-                                   id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"],
-                                   short_name=dealer_doc["short_name"],
-                                   st=dealer_doc["st"], zip=dealer_doc["zip"])
-            results.append(dealer_obj)
-    return results
+        #extract the first element
+        dealer = json_result["body"][0]
+        # Get its content in `doc` object
+        # Create a CarDealer object with values in `doc` object
+        dealer_obj = CarDealer(address=dealer['address'],city=dealer['city'], full_name=dealer['full_name'],
+                                id=dealer['id'], lat=dealer['lat'], long=dealer['long'],
+                                short_name=dealer['short_name'],
+                                st=dealer['st'], zip=dealer['zip'])
+    return dealer_obj
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
 # def analyze_review_sentiments(text):
@@ -141,8 +140,8 @@ def get_dealer_by_id_from_cf(url, id):
 # - Get the returned sentiment label such as Positive or Negative
 
 def analyze_review_sentiments(text):
-    url = ""
-    api_key = ""
+    url = "https://api.eu-gb.natural-language-understanding.watson.cloud.ibm.com/instances/46c5175b-8c31-4c1c-b2b9-5e59665b1cba"
+    api_key = "wXbbrw1ed_4OYfjsbNT2dzQZ5AoXxnukn5v-9_bMY8Rl"
     authenticator = IAMAuthenticator(api_key)
     natural_language_understanding = NaturalLanguageUnderstandingV1(version='2021-08-01',authenticator=authenticator)
     natural_language_understanding.set_service_url(url)
